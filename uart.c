@@ -1,8 +1,8 @@
 #include "uart.h"
 
-void USART_Init(USART_TypeDef *USART_num, Baudrate_t Baudrate)
+void USART_Init(USART_TypeDef *USARTx, BR_UART_t Baudrate)
 {
-	if(USART_num == USART1)
+	if(USARTx == USART1)
 	{
 		//Enable the USART1 clock
 		RCC->APB2ENR |= RCC_APB2ENR_USART1EN;
@@ -11,7 +11,7 @@ void USART_Init(USART_TypeDef *USART_num, Baudrate_t Baudrate)
 		//Config pin A10 - RXD
 		GPIO_Init(GPIOA, 10, IN, PU_PD);
 	}
-	else if(USART_num == USART2)
+	else if(USARTx == USART2)
 	{
 		//Enable the USART2 clock
 		RCC->APB1ENR |= RCC_APB1ENR_USART2EN;
@@ -20,7 +20,7 @@ void USART_Init(USART_TypeDef *USART_num, Baudrate_t Baudrate)
 		//Config pin A3 - RXD
 		GPIO_Init(GPIOA, 3, IN, PU_PD);
 	}
-	else if(USART_num == USART3)
+	else if(USARTx == USART3)
 	{
 		//Enable the USART clock
 		RCC->APB1ENR |= RCC_APB1ENR_USART3EN;
@@ -30,29 +30,30 @@ void USART_Init(USART_TypeDef *USART_num, Baudrate_t Baudrate)
 		GPIO_Init(GPIOB, 11, IN, PU_PD);
 	}
 	//Select the desired baud rate
-	USART_num->BRR = Baudrate;
+	USARTx->BRR = Baudrate;
 	
-	USART_num->CR1 |= USART_CR1_TE  //Transmitter enable
+	USARTx->CR1 |= USART_CR1_TE  //Transmitter enable
 								 | USART_CR1_RE		//Receiver enable
 								 | USART_CR1_UE;  //USART enable
 
 }
 
-void USART_Transmit(USART_TypeDef *USART_num, uint8_t *data, uint32_t length)
+void USART_Transmit(USART_TypeDef *USARTx, uint8_t *data, uint32_t length)
 {
 	for(int i=0; i<length; i++)
 		{
-			USART1->DR = data[i];
-			while(!(USART_num->SR & USART_SR_TC)); //Transmission complete
+			while(!(USART1->SR & USART_SR_TXE)); //Transmit data register not empty
+			USARTx->DR = data[i];
+			while(!(USARTx->SR & USART_SR_TC)); //Transmission complete
 		}
 }
 
-void USART_Receive(USART_TypeDef *USART_num, uint8_t *data, uint32_t length)
+void USART_Receive(USART_TypeDef *USARTx, uint8_t *data, uint32_t length)
 {
-	while(!(USART_num->SR & USART_SR_RXNE));
+	while(!(USARTx->SR & USART_SR_RXNE));
 	for(int i=0; i<length; i++)
 	{
-		data[i] = USART_num->DR;
-		while((USART_num->SR & USART_SR_RXNE));
+		data[i] = USARTx->DR;
+		while((USARTx->SR & USART_SR_RXNE));
 	}
 }

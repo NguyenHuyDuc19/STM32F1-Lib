@@ -19,10 +19,10 @@ typedef enum
 	BR_USART3_9600 	= 	0xEA6,
 	BR_USART3_115200 = 	0x138
 	
-} Baudrate_t;
+}BR_UART_t;
 
-void USART_Init(USART_TypeDef *USART_num, Baudrate_t Baudrate);
-void USART_Transmit(USART_TypeDef *USART_num, uint8_t *data, uint32_t length);
-void USART_Receive(USART_TypeDef *USART_num, uint8_t *data, uint32_t length);
+void USART_Init(USART_TypeDef *USARTx, BR_UART_t Baudrate);
+void USART_Transmit(USART_TypeDef *USARTx, uint8_t *data, uint32_t length);
+void USART_Receive(USART_TypeDef *USARTx, uint8_t *data, uint32_t length);
 
 #endif
