@@ -1,25 +1,25 @@
 #include "gpio.h"
 
 
-void GPIO_Init(GPIO_TypeDef *port, uint8_t pin, uint8_t mode, uint8_t config)
+void GPIO_Init(GPIO_TypeDef *GPIOx, uint8_t pin, uint8_t mode, uint8_t config)
 {
 	volatile uint32_t *CR;
 	if(pin <= 7)
 	{
-		CR = &(port->CRL);
+		CR = &(GPIOx->CRL);
 	}
 	else
 	{
-		CR = &(port->CRH);
+		CR = &(GPIOx->CRH);
 		pin -= 8;
 	}
 	
 	//Enable clock 
-	if(port == GPIOA)
+	if(GPIOx == GPIOA)
 	{
 		RCC->APB2ENR |= RCC_APB2ENR_IOPAEN;
 	}
-	else if(port == GPIOB)
+	else if(GPIOx == GPIOB)
 	{
 		RCC->APB2ENR |= RCC_APB2ENR_IOPBEN;
 	}
@@ -32,27 +32,27 @@ void GPIO_Init(GPIO_TypeDef *port, uint8_t pin, uint8_t mode, uint8_t config)
 	*CR |= (mode << (4*pin)) | (config << (4*pin + 2)); 
 }
 
-void GPIO_WritePin(GPIO_TypeDef *port, uint8_t pin, bool state)
+void GPIO_WritePin(GPIO_TypeDef *GPIOx, uint8_t pin, bool state)
 {
 	if(state)
 	{
-		port->ODR |= 1<<pin;
+		GPIOx->ODR |= 1<<pin;
 	}
 	else
 	{
-		port->BRR |= 1<<pin;
+		GPIOx->BRR |= 1<<pin;
 	}
 }
 
-void GPIO_TogglePin(GPIO_TypeDef *port, uint8_t pin)
+void GPIO_TogglePin(GPIO_TypeDef *GPIOx, uint8_t pin)
 {
-	port->ODR ^= 1<<pin;
+	GPIOx->ODR ^= 1<<pin;
 }
 
 
-bool GPIO_ReadPin(GPIO_TypeDef *port, uint8_t pin)
+bool GPIO_ReadPin(GPIO_TypeDef *GPIOx, uint8_t pin)
 {
-	if((port->IDR>>pin) & 1)
+	if((GPIOx->IDR>>pin) & 1)
 	{
 		return 1;
 	}

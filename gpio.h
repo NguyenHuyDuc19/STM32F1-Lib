@@ -2,7 +2,7 @@
 #define INC_GPIO_H_
 
 
-#include "stm32f10x.h"                  
+#include "stm32f10x.h"
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -25,12 +25,12 @@
 #define	AF_OD			3
 
 
-void GPIO_WritePin(GPIO_TypeDef *port, uint8_t pin, bool state);
-void GPIO_TogglePin(GPIO_TypeDef *port, uint8_t pin);
-bool GPIO_ReadPin(GPIO_TypeDef *port, uint8_t pin);
+void GPIO_WritePin(GPIO_TypeDef *GPIOx, uint8_t pin, bool state);
+void GPIO_TogglePin(GPIO_TypeDef *GPIOx, uint8_t pin);
+bool GPIO_ReadPin(GPIO_TypeDef *GPIOx, uint8_t pin);
 
 
-void GPIO_Init(GPIO_TypeDef *port, uint8_t pin, uint8_t mode, uint8_t config);
+void GPIO_Init(GPIO_TypeDef *GPIOx, uint8_t pin, uint8_t mode, uint8_t config);
 
 #endif
 
