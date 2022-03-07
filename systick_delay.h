@@ -2,7 +2,7 @@
 #define _SYSTICK_DELAY_H_
 
 #include <stdint.h>
-#include "stm32f10x.h"
+#include "stm32f1xx.h"
 
 
 void SysTick_Handler(void);
