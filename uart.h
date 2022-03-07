@@ -1,28 +1,52 @@
-#ifndef _UART_H_
-#define _UART_H_
+/*
+ * uart.h
+ *
+ *  Created on: Jan 7, 2022
+ *      Author: Nguyen Huy Duc
+ */
 
-#include "stm32f10x.h"
+#ifndef INC_UART_H_
+#define INC_UART_H_
+
+#include "stm32f1xx.h"
+#include "stdint.h"
+#include "stdbool.h"
+
 #include "gpio.h"
-#include "systick_delay.h"
+#include "rcc.h"
 
-typedef enum 
+/**
+ *  @brief UART Baudrate
+ */
+typedef enum
 {
-	BR_USART1_2400 	=		0x753,
-	BR_USART1_9600 	= 	0x1D4C,
-	BR_USART1_115200 = 	0x271,
-	
-	BR_USART2_2400	 	=		0x3A98,
-	BR_USART2_9600 	= 	0xEA6,
-	BR_USART2_115200 = 	0x138,
-	
-	BR_USART3_2400		=		0x3A98,
-	BR_USART3_9600 	= 	0xEA6,
-	BR_USART3_115200 = 	0x138
-	
-}BR_UART_t;
+	USART1_BR_2400		=	0x753,
+	USART1_BR_9600 		= 	0x1D4C,
+	USART1_BR_115200		= 	0x271,
 
-void USART_Init(USART_TypeDef *USARTx, BR_UART_t Baudrate);
-void USART_Transmit(USART_TypeDef *USARTx, uint8_t *data, uint32_t length);
-void USART_Receive(USART_TypeDef *USARTx, uint8_t *data, uint32_t length);
+	USART2_BR_2400	 	=	0x3A98,
+	USART2_BR_9600 		= 	0xEA6,
+	USART2_BR_115200 	= 	0x138,
 
-#endif
+	USART3_BR_2400		=	0x3A98,
+	USART3_BR_9600 		= 	0xEA6,
+	USART3_BR_115200 	=	0x138
+}USART_BR_t;
+
+/**
+ *  @brief UART Peripheral Initialization
+ */
+void USART_Init(USART_TypeDef *USARTx, USART_BR_t Baudrate);
+
+/**
+ *  @brief UART Transmit
+ */
+bool USART_Transmit(USART_TypeDef *USARTx, uint8_t *data, uint32_t length, uint32_t timeout);
+
+/**
+ *  @brief UART Receive
+ */
+bool USART_Receive(USART_TypeDef *USARTx, uint8_t *data, uint32_t length, uint32_t timeout);
+
+#endif /* INC_UART_H_ */
+
