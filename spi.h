@@ -1,9 +1,8 @@
 #ifndef _SPI_H_
 #define _SPI_H_
 
-#include "stm32f10x.h"
+#include "stm32f1xx.h"
 #include "gpio.h"
-#include "systick_delay.h"
 
 
 typedef enum

@@ -5,13 +5,12 @@ void SPI_Init(SPI_TypeDef *SPIx, BR_SPI_t Baudrate)
 	if(SPIx == SPI1)
 	{
 		RCC->APB2ENR |= RCC_APB2ENR_SPI1EN; //SPI1 clock enable
-		
 		//GPIO Config
 		GPIO_Init(GPIOA, 4, OUT_HIGH, GP_PP); 	//PA4 - SPI1_NSS
 		GPIO_Init(GPIOA, 5, OUT_HIGH, AF_PP); 	//PA5 - SPI1_SCK
-		GPIO_Init(GPIOA, 6, IN, PU_PD); 				//PA6 - SPI1_MISO
-		GPIO_Init(GPIOA, 7, OUT_HIGH, AF_PP);		//PA7 - SPI1_MOSI
-		GPIO_WritePin(GPIOA, 4, 1); 						//Pull up chip select pin - PA4
+		GPIO_Init(GPIOA, 6, IN, PU_PD); 		//PA6 - SPI1_MISO
+		GPIO_Init(GPIOA, 7, OUT_HIGH, AF_PP);	//PA7 - SPI1_MOSI
+		GPIO_WritePin(GPIOA, 4, 1); 			//Pull up chip select pin - PA4
 	}
 	else if(SPIx == SPI2)
 	{
@@ -66,35 +65,35 @@ void SPI_Transmit(SPI_TypeDef *SPIx, uint8_t *data, uint32_t length)
 	
 	for(uint32_t i = 0; i < length; i++)
 	{
-		SPI_num->DR = data[i];
-		while(SPI_num->SR & SPI_SR_BSY);
-		while(!(SPI_num->SR & SPI_SR_TXE));
+		SPIx->DR = data[i];
+		while(SPIx->SR & SPI_SR_BSY);
+		while(!(SPIx->SR & SPI_SR_TXE));
 	}
 	
-	Stop_Transmitting(SPI_num); //Stop transmitting
+	Stop_Transmitting(SPIx); //Stop transmitting
 }
 
 //SPI Recevie test function
 
-char SPI_RX(SPI_TypeDef *SPI_num, char value)
+char SPI_RX(SPI_TypeDef *SPIx, char value)
 {
 	char rx_val;
-	SPI_num->DR = value;
-	while(SPI_num->SR & 0x80);
-	while(SPI_num->SR & 0x01)
+	SPIx->DR = value;
+	while(SPIx->SR & 0x80);
+	while(SPIx->SR & 0x01)
 	{
-		rx_val = SPI_num->DR;
+		rx_val = SPIx->DR;
 	}
 	return rx_val;
 }
 
-void SPI_CS(SPI_TypeDef *SPI_num, uint8_t LOW_HIGH)
+void SPI_CS(SPI_TypeDef *SPIx, uint8_t LOW_HIGH)
 {
-	if(SPI_num == SPI1)
+	if(SPIx == SPI1)
 	{
 		GPIO_WritePin(GPIOA, 4, LOW_HIGH);
 	}
-	else if(SPI_num == SPI2)
+	else if(SPIx == SPI2)
 	{
 		GPIO_WritePin(GPIOB, 12, LOW_HIGH);
 	}
